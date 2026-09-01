@@ -1,33 +1,31 @@
 # Logs
-logs
+logs/
 *.log
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 pnpm-debug.log*
 lerna-debug.log*
-pids
 *.pid
 *.seed
 *.pid.lock
 
 # Node / React
 node_modules/
+coverage/
 dist/
 dist-ssr/
-coverage/
+build/
 .vite/
 *.local
 .env
 .env.*
 !.env.example
 
-# Build artifacts
-*.tsbuildinfo
-
 # .NET / C#
-bin/
-obj/
+**/bin/
+**/obj/
+**/TestResults/
 *.user
 *.userosscache
 *.suo
@@ -36,15 +34,14 @@ obj/
 *.db
 *.db-shm
 *.db-wal
-TestResults/
-packages/
-*.nupkg
-*.snupkg
+*.csproj.user
+*.rsuser
 
 # IDE / editor
 .vscode/*
 !.vscode/extensions.json
 .idea/
+.vs/
 *.swp
 *.swo
 *~
