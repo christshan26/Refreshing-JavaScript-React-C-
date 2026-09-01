@@ -22,4 +22,16 @@ public class IssuesController : ControllerBase
         
         return Ok(issues);
     }
+
+    [HttpPost]
+    public async Task<ActionResult<IssueDto>> Create(
+        CreateIssueDto createIssueDto)
+    {
+        var createdIssue = await _issueService.CreateAsync(createIssueDto);
+
+        return Created(
+            $"/api/issues/{createdIssue.Id}",
+            createdIssue
+        );
+    }
 }
