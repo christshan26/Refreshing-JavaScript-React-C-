@@ -1,12 +1,49 @@
 import {useState} from 'react'
 
-function IssueForm() {
+function IssueForm({ onIssueCreated }) {
     const [title, setTitle] = useState('')
     const [description, setDescription] = useState('')
     const [status, setStatus] = useState('Open')
 
+    async function handleSubmit(event) {
+    event.preventDefault()
+
+    const newIssue = {
+        title,
+        description: description || null,
+        status
+    }
+
+    try {
+        const response = await fetch(
+            'http://localhost:5201/api/issues', 
+            {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(newIssue)
+            }
+        )
+
+        if (!response.ok) {
+            throw new Error(`HTTP error: ${response.status}`)
+        }
+
+        const createdIssue = await response.json()
+
+        onIssueCreated(createdIssue)
+
+        setTitle('')
+        setDescription('')
+        setStatus('Open')
+    } catch (error) {
+        console.error('Could not create issue:', error)
+    }
+}
+
     return (
-        <form>
+        <form onSubmit={handleSubmit}>
             <h2>Skapa ärende</h2>
 
             <div>

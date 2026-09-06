@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import IssueItem from './IssueItem'
+import IssueForm from './IssueForm'
 
 function IssueList() {
     const [issues, setIssues] = useState([])
@@ -26,8 +27,18 @@ function IssueList() {
         loadIssues()
     }, [])
 
+    function handleIssueCreated(createdIssue) {
+        setIssues(currentIssues => [
+            createdIssue,
+            ...currentIssues
+        ])
+    }
+
     return (
         <div>
+
+            <IssueForm onIssueCreated={handleIssueCreated} />
+
             <h2>Ärenden</h2>
 
             {error && <p>{error}</p>}
