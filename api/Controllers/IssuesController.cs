@@ -34,4 +34,22 @@ public class IssuesController : ControllerBase
             createdIssue
         );
     }
+
+    [HttpPut("{id:int}")]
+    public async Task<ActionResult<IssueDto>> Update(
+        int id,
+        UpdateIssueDto updateIssueDto)
+    {
+        var updatedIssue = await _issueService.UpdateAsync(
+            id,
+            updateIssueDto
+            );
+
+        if (updatedIssue is null)
+        {
+            return NotFound();
+        }
+
+        return Ok(updatedIssue);
+    }
 }

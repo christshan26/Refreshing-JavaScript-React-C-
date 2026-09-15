@@ -1,9 +1,13 @@
 import {useState} from 'react'
 
-function IssueForm({ onIssueCreated }) {
-    const [title, setTitle] = useState('')
-    const [description, setDescription] = useState('')
-    const [status, setStatus] = useState('Open')
+function IssueForm({ 
+    issueToEdit,
+    onIssueCreated,
+    onIssueUpdated
+}) {
+    const [title, setTitle] = useState(issueToEdit?.title ?? '')
+    const [description, setDescription] = useState(issueToEdit?.description ?? '')
+    const [status, setStatus] = useState(issueToEdit?.status ?? 'Open')
 
     async function handleSubmit(event) {
     event.preventDefault()
@@ -14,25 +18,34 @@ function IssueForm({ onIssueCreated }) {
         status
     }
 
+    const isEditing = issueToEdit !== null
+
+    const url = isEditing
+        ? `http://localhost:5201/api/issues/${issueToEdit.id}`
+        : 'http://localhost:5201/api/issues'
+
+    const method = isEditing ? 'PUT' : 'POST'
+
     try {
-        const response = await fetch(
-            'http://localhost:5201/api/issues', 
-            {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(newIssue)
-            }
-        )
+        const response = await fetch( url, {
+            method,
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(newIssue)
+        })
 
         if (!response.ok) {
             throw new Error(`HTTP error: ${response.status}`)
         }
 
-        const createdIssue = await response.json()
+        const savedIssue = await response.json()
 
-        onIssueCreated(createdIssue)
+        if (isEditing) {
+            onIssueUpdated(savedIssue)
+        } else {
+            onIssueCreated(savedIssue)
+        }
 
         setTitle('')
         setDescription('')
@@ -44,7 +57,9 @@ function IssueForm({ onIssueCreated }) {
 
     return (
         <form onSubmit={handleSubmit}>
-            <h2>Skapa ärende</h2>
+            <h2>
+                {issueToEdit ? 'Redigera ärende' : 'Skapa ärende'}
+            </h2>
 
             <div>
                 <label htmlFor="title">Titel:</label>
@@ -82,7 +97,7 @@ function IssueForm({ onIssueCreated }) {
             </div>
 
             <button type="submit">
-                Skapa
+                {issueToEdit ? 'Spara ändringar' : 'Skapa'}
             </button>
         </form>
     )

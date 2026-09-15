@@ -53,4 +53,33 @@ public class IssueService : IIssueService
             CreatedAt = issue.CreatedAt
         };
     }
+
+    public async Task<IssueDto?> UpdateAsync(
+        int id,
+        UpdateIssueDto updateIssueDto)
+
+    {
+        var issue = await _context.Issues
+            .FirstOrDefaultAsync(issue => issue.Id == id);
+
+            if (issue == null)
+            {
+                return null;
+            }
+
+            issue.Title = updateIssueDto.Title;
+            issue.Description = updateIssueDto.Description;
+            issue.Status = updateIssueDto.Status;
+
+            await _context.SaveChangesAsync();
+
+            return new IssueDto
+            {
+                Id = issue.Id,
+                Title = issue.Title,
+                Description = issue.Description,
+                Status = issue.Status,
+                CreatedAt = issue.CreatedAt
+            };
+    }
 }

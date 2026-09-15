@@ -5,6 +5,7 @@ import IssueForm from './IssueForm'
 function IssueList() {
     const [issues, setIssues] = useState([])
     const [error, setError] = useState(null)
+    const [issueToEdit, setIssueToEdit] = useState(null)
 
     useEffect(() => {
         async function loadIssues() {
@@ -34,10 +35,27 @@ function IssueList() {
         ])
     }
 
+    function handleIssueUpdated(updatedIssue) {
+        setIssues(currentIssues => 
+            currentIssues.map(issue =>
+                issue.id === updatedIssue.id 
+                ? updatedIssue 
+                : issue
+            )
+        )
+
+        setIssueToEdit(null)
+    }
+
     return (
         <div>
 
-            <IssueForm onIssueCreated={handleIssueCreated} />
+            <IssueForm
+            key={issueToEdit?.id ?? 'new'}
+            issueToEdit={issueToEdit}
+            onIssueCreated={handleIssueCreated}
+            onIssueUpdated={handleIssueUpdated}
+            />
 
             <h2>Ärenden</h2>
 
@@ -48,6 +66,7 @@ function IssueList() {
                     <IssueItem
                         key={issue.id}
                         issue={issue}
+                        onEdit={setIssueToEdit}
                     />
                 ))}
             </ul>
