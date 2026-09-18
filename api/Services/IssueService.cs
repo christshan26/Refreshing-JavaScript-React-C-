@@ -41,7 +41,9 @@ public class IssueService : IIssueService
                 Title = issue.Title,
                 Description = issue.Description,
                 Status = issue.Status,
-                CreatedAt = issue.CreatedAt
+                CreatedAt = issue.CreatedAt,
+                CategoryId = issue.CategoryId,
+                CategoryName = issue.Category != null ? issue.Category.Name : null
             })
             .ToListAsync();
     }
@@ -53,12 +55,22 @@ public class IssueService : IIssueService
             Title = createIssueDto.Title,
             Description = createIssueDto.Description,
             Status = createIssueDto.Status,
-            CreatedAt = DateTime.UtcNow
+            CreatedAt = DateTime.UtcNow,
+            CategoryId = createIssueDto.CategoryId
         };
 
         await _context.Issues.AddAsync(issue);
         
         await _context.SaveChangesAsync();
+
+        string? categoryName = null;
+        if (issue.CategoryId is not null)
+        {
+            categoryName = await _context.Categories
+                .Where(category => category.Id == issue.CategoryId)
+                .Select(category => category.Name)
+                .FirstOrDefaultAsync();
+        }
 
         return new IssueDto
         {
@@ -66,6 +78,8 @@ public class IssueService : IIssueService
             Title = issue.Title,
             Description = issue.Description,
             Status = issue.Status,
+            CategoryId = issue.CategoryId,
+            CategoryName = categoryName,
             CreatedAt = issue.CreatedAt
         };
     }
@@ -86,16 +100,23 @@ public class IssueService : IIssueService
             issue.Title = updateIssueDto.Title;
             issue.Description = updateIssueDto.Description;
             issue.Status = updateIssueDto.Status;
+            issue.CategoryId = updateIssueDto.CategoryId;
 
             await _context.SaveChangesAsync();
 
-            return new IssueDto
+            return await _context.Issues
+                .AsNoTracking()
+                .Where(issue => issue.Id == id)
+                .Select(issue => new IssueDto
             {
                 Id = issue.Id,
                 Title = issue.Title,
                 Description = issue.Description,
                 Status = issue.Status,
+                CategoryId = issue.CategoryId,
+                CategoryName = issue.Category != null ? issue.Category.Name : null,
                 CreatedAt = issue.CreatedAt
-            };
+            })
+                .FirstAsync();
     }
 }

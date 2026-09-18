@@ -11,4 +11,6 @@ public class UpdateIssueDto
 
     [Required]
     public string Status { get; set; } = string.Empty;
+
+    public int? CategoryId { get; set; }
 }

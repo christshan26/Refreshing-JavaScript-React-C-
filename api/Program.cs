@@ -64,6 +64,26 @@ using (var scope = app.Services.CreateScope())
 
         context.SaveChanges();
     }
+
+    if (!context.Categories.Any())
+    {
+        context.Categories.AddRange(
+            new Category
+            {
+                Name = "Bug"
+            },
+            new Category
+            {
+                Name = "Feature"
+            },
+            new Category
+            {
+                Name = "Support"
+            }
+        );
+
+        context.SaveChanges();
+    }
 }
 
 // Configure the HTTP request pipeline.

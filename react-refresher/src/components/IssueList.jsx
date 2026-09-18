@@ -6,6 +6,7 @@ function IssueList() {
     const [issues, setIssues] = useState([])
     const [error, setError] = useState(null)
     const [issueToEdit, setIssueToEdit] = useState(null)
+    const [categories, setCategories] = useState([])
 
     useEffect(() => {
         async function loadIssues() {
@@ -25,6 +26,24 @@ function IssueList() {
             }
         }
 
+                async function loadCategories() {
+            try {
+                const response = await fetch('http://localhost:5201/api/categories')
+
+                if (!response.ok) {
+                    throw new Error(`HTTP error: ${response.status}`)
+                }
+
+                const data = await response.json()
+
+                setCategories(data)
+            } catch (error) {
+                console.error('Could not load categories:', error)
+                setError('Kunde inte hämta kategorier.')
+            }
+        }
+
+        loadCategories()
         loadIssues()
     }, [])
 
@@ -78,6 +97,7 @@ function IssueList() {
             <IssueForm
             key={issueToEdit?.id ?? 'new'}
             issueToEdit={issueToEdit}
+            categories={categories}
             onIssueCreated={handleIssueCreated}
             onIssueUpdated={handleIssueUpdated}
             />

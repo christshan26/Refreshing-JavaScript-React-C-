@@ -4,6 +4,8 @@ function IssueItem({ issue, onEdit, onDelete}) {
             <strong>{issue.title}</strong>
             {' - '}
             {issue.status}
+            {' - '}
+            {issue.categoryName ?? 'Ingen kategori'}
 
         <button
             type="button"

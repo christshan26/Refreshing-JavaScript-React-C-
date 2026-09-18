@@ -2,12 +2,14 @@ import {useState} from 'react'
 
 function IssueForm({ 
     issueToEdit,
+    categories,
     onIssueCreated,
     onIssueUpdated
 }) {
     const [title, setTitle] = useState(issueToEdit?.title ?? '')
     const [description, setDescription] = useState(issueToEdit?.description ?? '')
     const [status, setStatus] = useState(issueToEdit?.status ?? 'Open')
+    const [categoryId, setCategoryId] = useState(issueToEdit?.categoryId ?? '')
 
     async function handleSubmit(event) {
     event.preventDefault()
@@ -15,7 +17,8 @@ function IssueForm({
     const newIssue = {
         title,
         description: description || null,
-        status
+        status,
+        categoryId: categoryId === '' ? null : categoryId
     }
 
     const isEditing = issueToEdit !== null
@@ -80,6 +83,26 @@ function IssueForm({
                     value={description}
                     onChange={event => setDescription(event.target.value)}
                 />
+            </div>
+
+            <div>
+                <label htmlFor="category">Kategori</label>
+
+                <select
+                    id="category"
+                    value={categoryId}
+                    onChange={event => setCategoryId(event.target.value === '' ? '' : Number(event.target.value))}>
+                        <option value="">Ingen kategori</option>
+
+                        {categories.map(category => (
+                            <option
+                                key={category.id}
+                                value={category.id}
+                            >
+                                {category.name}
+                            </option>
+                        ))}
+                </select>
             </div>
 
             <div>

@@ -7,4 +7,6 @@ public class Issue
     public string? Description { get; set; }
     public string Status { get; set; } = string.Empty;
     public DateTime CreatedAt { get; set; }
+    public int? CategoryId { get; set; }
+    public Category? Category { get; set; }
 }

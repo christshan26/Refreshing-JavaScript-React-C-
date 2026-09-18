@@ -11,4 +11,6 @@ public class IssueDto
     public string Status { get; set; } = string.Empty;
 
     public DateTime CreatedAt { get; set; }
+    public int? CategoryId { get; set; }
+    public string? CategoryName { get; set; }
 }
