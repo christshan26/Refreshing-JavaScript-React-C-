@@ -14,6 +14,22 @@ public class IssueService : IIssueService
         _context = context;
     }
 
+    public async Task<bool> DeleteAsync(int id)
+    {
+        var issue = await _context.Issues
+            .FirstOrDefaultAsync(issue => issue.Id == id);
+
+        if (issue is null)
+        {
+            return false;
+        }
+
+        _context.Issues.Remove(issue);
+        await _context.SaveChangesAsync();
+
+        return true;
+    }
+
     public async Task<List<IssueDto>> GetAllAsync()
     {
         return await _context.Issues

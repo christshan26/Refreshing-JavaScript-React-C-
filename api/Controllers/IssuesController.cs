@@ -15,6 +15,19 @@ public class IssuesController : ControllerBase
         _issueService = issueService;
     }
 
+    [HttpDelete("{id:int}")]
+    public async Task<IActionResult> Delete(int id)
+    {
+        var deleted = await _issueService.DeleteAsync(id);
+
+        if (!deleted)
+        {
+            return NotFound();
+        }
+
+        return NoContent();
+    }
+
     [HttpGet]
     public async Task<ActionResult<List<IssueDto>>> GetAll()
     {
