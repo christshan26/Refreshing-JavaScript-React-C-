@@ -30,6 +30,11 @@ function IssueList() {
 
     async function handleIssueDeleted(id) {
         setError(null)
+        const confirmDelete = window.confirm('Är du säker på att du vill ta bort ärendet?')
+
+        if (!confirmDelete) {
+            return
+        }
 
         try {
             const response = await fetch(`http://localhost:5201/api/issues/${id}`, {
